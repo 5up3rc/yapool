@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/sirupsen/logrus"
 	"yapool"
+
 )
 
 func main() {
@@ -15,6 +16,7 @@ func main() {
 		fmt.Println("receive msg is ", msg.Level, msg.Msg)
 	}, "6s")
 	if err != nil {
+
 		logrus.Error(err)
 	}
 	/*if err := center.Receive("6s");err != nil {
