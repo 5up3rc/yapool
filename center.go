@@ -72,7 +72,7 @@ func (c *Center) ReceiveWithFunc(handleMsg func(msg *Msg), timeout string) error
 
 func (c *Center) handleAgent(conn net.Conn, timeout string) {
 
-	agentID := conn.RemoteAddr().String()
+	agentID := strings.Split(conn.RemoteAddr().String(),":")[0]
 	duration, err := time.ParseDuration(timeout)
 	if err != nil {
 		logrus.Errorf("parse timeout(%s)  to duration error : %s", timeout[0], err.Error())
