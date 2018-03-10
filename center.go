@@ -72,7 +72,7 @@ func (c *Center) ReceiveWithFunc(handleMsg func(msg *Msg), timeout string) error
 
 func (c *Center) handleAgent(conn net.Conn, timeout string) {
 
-	agentID := strings.Split(conn.RemoteAddr().String(),":")[0]
+	agentID := strings.Split(conn.RemoteAddr().String(), ":")[0]
 	duration, err := time.ParseDuration(timeout)
 	if err != nil {
 		logrus.Errorf("parse timeout(%s)  to duration error : %s", timeout[0], err.Error())
@@ -119,12 +119,12 @@ func (c *Center) expire(duration time.Duration, agent string) {
 	logrus.Warnf("agent(%s) die!", agent)
 }
 
-func(c *Center) AllAgents() []string {
+func (c *Center) AllAgents() []string {
 	c.RLock()
 	defer c.RUnlock()
-	allAgents:=make([]string,0)
+	allAgents := make([]string, 0)
 	for agent, _ := range c.agentTimerMap {
-		allAgents=append(allAgents,agent)
+		allAgents = append(allAgents, agent)
 	}
 	return allAgents
 }
@@ -144,4 +144,3 @@ func decodeMsgFromAgent(conn net.Conn) (*Msg, error) {
 	}
 	return msg, nil
 }
-

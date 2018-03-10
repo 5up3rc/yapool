@@ -25,10 +25,16 @@ func GetAgent(centerIPs []string) *Agent {
 
 func (a *Agent) Heartbeat(interval string) {
 	a.CenterConn.Range(func(ip, conn interface{}) bool {
-		go a.connectCenter(ip.(string), interval)
+		go a.connectCenter(ip.(string), interval, true)
 		return true
 	})
+}
 
+func (a *Agent) HeartbeatNotRetry(interval string) {
+	a.CenterConn.Range(func(ip, conn interface{}) bool {
+		go a.connectCenter(ip.(string), interval, false)
+		return true
+	})
 }
 
 func (a *Agent) SendMsgToCenter(l Level, msg ...interface{}) []error {
@@ -59,7 +65,7 @@ func (a *Agent) SendMsgToCenter(l Level, msg ...interface{}) []error {
 	return errs
 }
 
-func (a *Agent) connectCenter(centerIP string, interval string) {
+func (a *Agent) connectCenter(centerIP string, interval string, isRetry bool) {
 	var duration time.Duration
 	var err error
 
@@ -76,6 +82,9 @@ func (a *Agent) connectCenter(centerIP string, interval string) {
 			conn, err := net.Dial("tcp", centerIP)
 			if err != nil {
 				logrus.Errorf("TCP  dial  Center(%s)  error : %s", centerIP, err.Error())
+				if !isRetry {
+					panic(nil)
+				}
 				continue
 			}
 			a.loopHandle(conn)

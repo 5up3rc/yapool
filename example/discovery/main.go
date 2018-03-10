@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/sirupsen/logrus"
 	"yapool"
-
 )
 
 func main() {
