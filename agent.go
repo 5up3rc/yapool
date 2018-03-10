@@ -8,6 +8,7 @@ import (
 )
 
 type Agent struct {
+	agentIP    string
 	w          *WaitGroupWrapper
 	CenterConn *syncmap.Map //key is ip(string)  ,  value is conn(*net.Conn)
 }
@@ -87,6 +88,9 @@ func (a *Agent) connectCenter(centerIP string, interval string, isRetry bool) {
 				}
 				continue
 			}
+			if a.agentIP == "" {
+				a.agentIP = conn.LocalAddr().String()
+			}
 			a.loopHandle(conn)
 		}
 	}
@@ -109,4 +113,8 @@ func (a *Agent) loopHandle(conn net.Conn) {
 	}
 	//logrus.Info("send")
 
+}
+
+func (a *Agent) LocalIP() string {
+	return a.agentIP
 }
